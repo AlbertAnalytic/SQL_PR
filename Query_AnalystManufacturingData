@@ -1,0 +1,123 @@
+ --Read DATA
+SELECT
+  *
+FROM
+  `dqlab-419001.Learning_sql.Manufacturing`; 
+  --Menampilkan kolom-kolom tertentu
+SELECT
+  ProductionVolume,
+  ProductionCost,
+  DeliveryDelay
+FROM
+  `dqlab-419001.Learning_sql.Manufacturing`;
+   --Filter DATA = Menampilkan DATA dengan defect rate diatas 3%
+SELECT
+  DefectRate
+FROM
+  `dqlab-419001.Learning_sql.Manufacturing`
+WHERE
+  DefectRate > 3;
+   --Tampilkan DATA dengan suplier quality diatas 8
+SELECT
+  SupplierQuality
+FROM
+  `dqlab-419001.Learning_sql.Manufacturing`
+WHERE
+  SupplierQuality >8 ;
+   --Agregasi DATA = Total Dan Rata-rata production cost Berdasarkan defect Status
+SELECT
+  DefectStatus,
+  SUM(ProductionCost) AS Total_ProductionCost,
+  AVG(ProductionCost) AS ProductionCost
+FROM
+  `dqlab-419001.Learning_sql.Manufacturing`
+GROUP BY
+  DefectStatus; 
+  --Rata-rata QuaityScore dan DefectRate Berdasarkan SupplierQuality
+SELECT
+  SupplierQuality,
+  AVG(QualityScore) AS AVG_QualityScore,
+  AVG(DefectRate) AS AVG_DefectRate
+FROM
+  `dqlab-419001.Learning_sql.Manufacturing`
+GROUP BY
+  SupplierQuality; 
+  --Mengurutkan DATA = Urutkan DATA Berdasarkan Production Volume Terbesar
+SELECT
+  ProductionVolume
+FROM
+  `dqlab-419001.Learning_sql.Manufacturing`
+ORDER BY
+  ProductionVolume DESC;
+SELECT
+  ProductionCost
+FROM
+  `dqlab-419001.Learning_sql.Manufacturing`
+ORDER BY
+  ProductionCost ASC; 
+  --mengurutkan DATA berdasarkan productivity Terendah
+SELECT
+  *
+FROM
+  `dqlab-419001.Learning_sql.Manufacturing`
+ORDER BY
+  WorkerProductivity ASC; 
+  --Penggunaan Fungsi --Hitung Jumlah DATA Berdasarkan DefctStatus
+SELECT
+  DefectStatus,
+  count (*) AS DefectCount
+FROM
+  `dqlab-419001.Learning_sql.Manufacturing`
+ORDER BY
+  DefecStatus; 
+  --Tampilkan Nilai Maximum dan Minimum Energy Consumption untuk Setiap Kategori Defect Status
+SELECT
+  DefectStatus,
+  MIN(EnergyConsumption) AS Min_EnergyConsumption,
+  MAX(EnergyConsumption) AS Max_EnergyConsumption
+FROM
+  `dqlab-419001.Learning_sql.Manufacturing`
+GROUP BY
+  DefectStatus; --
+JOIN
+  DATA --
+JOIN
+  dengan Tabel Maintenance Logs
+SELECT
+  p.ProductionVolume,
+  p.MaintenanceHours,
+  m.LoogDetails
+FROM
+  'dqlab-419001.Learning_sql.Manufacturing' AS p
+JOIN
+  'dqlab-419001.Learning_sql.Maintenance_Logs' AS m
+ON
+  p.ProductionID = m.ProductionID;
+   --SUBQUERIES --MEnampilkan DATA dengan Maintenance Hours diatas Rata-rata
+SELECT
+  *
+FROM
+  `dqlab-419001.Learning_sql.Manufacturing`
+WHERE
+  MaintenanceHours > (
+  SELECT
+    AVG(MaintenanceHours)
+  FROM
+    `dqlab-419001.Learning_sql.Manufacturing`); 
+
+    --CTE -Common TABLE Expresion --Menampilkan rata-rata Energy Efficiency dan Energy Consumption berdasarakan additive Process Time Menggunanakn CTE
+    
+WITH
+  EnergyData AS (
+  SELECT
+    AdditiveProcessTime,
+    AVG(EnergyEfficiency) AS AVG_EnergyEfficiency,
+    AVG(Energyconsumption) AS AVG_EnergyConsumption
+  FROM
+    `dqlab-419001.Learning_sql.Manufacturing`
+  GROUP BY
+    AdditiveProcessTime )
+SELECT
+  *
+FROM
+  EnergyData;
